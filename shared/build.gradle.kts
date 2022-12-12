@@ -1,6 +1,7 @@
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    id("com.google.devtools.ksp")
 }
 
 kotlin {
@@ -17,7 +18,11 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting
+        val commonMain by getting {
+            dependencies {
+                implementation("me.tatarka.inject:kotlin-inject-runtime:0.5.1")
+            }
+        }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
@@ -44,6 +49,17 @@ kotlin {
             iosSimulatorArm64Test.dependsOn(this)
         }
     }
+}
+
+kotlin.sourceSets.commonMain {
+    kotlin.srcDir("build/generated/ksp/")
+}
+
+dependencies {
+    add("kspAndroid", "me.tatarka.inject:kotlin-inject-compiler-ksp:0.5.1")
+    add("kspIosX64","me.tatarka.inject:kotlin-inject-compiler-ksp:0.5.1")
+    add("kspIosArm64", "me.tatarka.inject:kotlin-inject-compiler-ksp:0.5.1")
+    add("kspIosSimulatorArm64", "me.tatarka.inject:kotlin-inject-compiler-ksp:0.5.1")
 }
 
 android {
